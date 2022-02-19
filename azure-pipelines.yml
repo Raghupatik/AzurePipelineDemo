@@ -18,7 +18,7 @@ stages:
   - job: 'Build'
     displayName: 'Build job'
     pool:
-      name: test123
+      name: Demo
     
     variables:
       dotnetSdkVersion: '5.x'
