@@ -24,6 +24,11 @@ stages:
       dotnetSdkVersion: '5.x'
 
     steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '14.x' 
+        force32bit: false # Optional
+        checkLatest: false # Optional
     - task: Npm@1
       displayName: 'Restore Angular Dependencies'
       inputs:
