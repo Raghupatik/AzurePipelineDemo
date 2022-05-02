@@ -1,0 +1,22 @@
+services:
+  app:
+    build: /*.csproj
+
+  redis:
+    image: redis:5.0-alpine3.10
+    volumes:
+      - "./healthchecks:/healthchecks"
+
+  db:
+    image: postgres:9.4
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    volumes:
+      - "db-data:/var/lib/postgresql/data"
+      - "./healthchecks:/healthchecks"
+    healthcheck:
+      test: /healthchecks/postgres.sh
+      interval: "5s"
+    networks:
+      - back-tier

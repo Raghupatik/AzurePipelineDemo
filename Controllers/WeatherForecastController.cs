@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace AzurePipelineDemo.Controllers
@@ -18,9 +19,17 @@ namespace AzurePipelineDemo.Controllers
 
         private readonly ILogger<WeatherForecastController> _logger;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        private readonly IConfiguration _config;
+
+        private string env;
+
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, IConfiguration config)
         {
             _logger = logger;
+            _config = config;
+
+            this.env = this._config.GetValue<string>("Environment");
+
         }
 
         [HttpGet]

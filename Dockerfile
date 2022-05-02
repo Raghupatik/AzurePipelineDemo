@@ -6,10 +6,16 @@ ENV config=Release
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
 
-RUN apt-get update
-RUN apt-get -y install curl gnupg
+# RUN apt-get update
+# RUN apt-get -y install curl gnupg
 RUN curl -sL https://deb.nodesource.com/setup_11.x  | bash -
 RUN apt-get -y install nodejs
+
+# FROM node:16-alpine As build-client
+# COPY ClientApp ./src/ClientApp
+# RUN npm install
+# RUN npm run build --prod
+
 
 COPY ["AzurePipelineDemo.csproj", "/src"]
 RUN dotnet restore "AzurePipelineDemo.csproj" 
