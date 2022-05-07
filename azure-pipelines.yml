@@ -27,7 +27,11 @@ stages:
     #  name: 'Test'
     steps:  
     
-    
+    - task: Npm@1
+      displayName: 'Install Client Dependencies'
+      inputs:
+        command: 'install'
+        workingDir: 'ClientApp'
     - task: Npm@1
       displayName: 'Build Client Application'
       inputs:
