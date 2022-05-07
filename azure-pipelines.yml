@@ -6,13 +6,13 @@
 trigger:
 - master
 - main
-- develop
+
 - feature/*
 - bugfix/*
 - hotfix/*
 
 pool:
-  name: 'Demo'
+  name: 'Demo1'
   artifaceName: drop
   isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
 
@@ -23,15 +23,15 @@ stages:
 - stage: 'Build'
   jobs:
   - job: 'BuildClient'
-    pool:
-      name: 'Test'
+    # pool:
+    #  name: 'Test'
     steps:  
+    
     - task: Npm@1
       displayName: 'Install Client Dependencies'
       inputs:
         command: 'install'
         workingDir: 'ClientApp'
-    
     - task: Npm@1
       displayName: 'Build Client Application'
       inputs:
@@ -39,13 +39,7 @@ stages:
         workingDir: 'ClientApp'
         customCommand: 'run build --prod'
 
-    - task: Npm@1
-      displayName: 'Test Client Application'
-      inputs:
-        command: 'custom'
-        workingDir: 'ClientApp'
-        customCommand: 'run test --watch=false'
-
+    
 
   - job: 'BuildDotnet'
     # pool: 
@@ -69,96 +63,3 @@ stages:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
         ArtifactName: 'drop'
         publishLocation: 'Container'
-
-- stage: 'DevDeployment'
-  jobs:
-    # Track deployments on the environment.
-  - deployment: DeployWeb
-    displayName: 'deploy Web App'
-    pool:
-      name: 'Demo'
-    # Creates an environment if it doesn't exist.
-    environment: 'Development'
-    strategy:
-      # Default deployment strategy, more coming...
-      runOnce:
-        deploy:
-          steps:
-          - task: AzureRmWebAppDeployment@4
-            inputs:
-              ConnectionType: 'AzureRM'
-              azureSubscription: 'Azure Connection'
-              appType: 'webAppLinux'
-              WebAppName: 'bermtecdev'
-              packageForLinux: '$(Pipeline.Workspace)/drop/$(config)/*.zip'
-
-- stage: 'TestDeployment'
-  jobs:
-    # Track deployments on the environment.
-  - deployment: DeployWeb
-    displayName: 'deploy Web App'
-    pool:
-      name: 'Demo'
-    # Creates an environment if it doesn't exist.
-    environment: 'Test'
-    strategy:
-      # Default deployment strategy, more coming...
-      runOnce:
-        deploy:
-          steps:
-          - task: AzureRmWebAppDeployment@4
-            inputs:
-              ConnectionType: 'AzureRM'
-              azureSubscription: 'Azure Connection'
-              appType: 'webAppLinux'
-              WebAppName: 'bermtecdev'
-              packageForLinux: '$(Pipeline.Workspace)/drop/$(config)/*.zip'
-
-- stage: 'StagingDeployment'
-  jobs:
-    # Track deployments on the environment.
-  - deployment: DeployWeb
-    displayName: 'deploy Web App'
-    variables: 
-      app: bermtecstaging
-    pool:
-      name: 'Demo'
-    # Creates an environment if it doesn't exist.
-    environment: 'Staging'
-    strategy:
-      # Default deployment strategy, more coming...
-      runOnce:
-        deploy:
-          steps:
-          - task: AzureRmWebAppDeployment@4
-            inputs:
-              ConnectionType: 'AzureRM'
-              azureSubscription: 'Azure Connection'
-              appType: 'webAppLinux'
-              WebAppName: '$(app)'
-              packageForLinux: '$(Pipeline.Workspace)/drop/$(config)/*.zip'
-
-- stage: 'ProdDeployment'
-  jobs:
-    # Track deployments on the environment.
-  - deployment: DeployWeb
-    displayName: 'deploy Web App'
-    condition: and(succeeded(), eq(variables.isMain, 'true'))
-    variables: 
-      app: bermtec
-    pool:
-      name: 'Demo'
-    # Creates an environment if it doesn't exist.
-    environment: 'Prod'
-    strategy:
-      # Default deployment strategy, more coming...
-      runOnce:
-        deploy:
-          steps:
-          - task: AzureRmWebAppDeployment@4
-            inputs:
-              ConnectionType: 'AzureRM'
-              azureSubscription: 'Azure Connection'
-              appType: 'webAppLinux'
-              WebAppName: '$(app)'
-              packageForLinux: '$(Pipeline.Workspace)/drop/$(config)/*.zip'
