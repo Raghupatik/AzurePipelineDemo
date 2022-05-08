@@ -76,7 +76,7 @@ stages:
   - deployment: DeployWeb
     displayName: 'deploy Web App'
     pool:
-      name: 'Demo'
+      name: 'Demo2'
     # Creates an environment if it doesn't exist.
     environment: 'Development'
     strategy:
