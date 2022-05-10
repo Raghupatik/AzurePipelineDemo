@@ -12,7 +12,7 @@ trigger:
 - hotfix/*
 
 pool:
-  name: 'Demo'
+  name: 'Demo2'
   artifaceName: drop
   isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
 
@@ -24,7 +24,7 @@ stages:
   jobs:
   - job: 'BuildClient'
     pool:
-      name: 'Test'
+      name: 'Demo2'
     steps:  
     - task: Npm@1
       displayName: 'Install Client Dependencies'
@@ -76,7 +76,7 @@ stages:
   - deployment: DeployWeb
     displayName: 'deploy Web App'
     pool:
-      name: 'Demo'
+      name: 'Demo2'
     # Creates an environment if it doesn't exist.
     environment: 'Development'
     strategy:
@@ -98,7 +98,7 @@ stages:
   - deployment: DeployWeb
     displayName: 'deploy Web App'
     pool:
-      name: 'Demo'
+      name: 'Demo2'
     # Creates an environment if it doesn't exist.
     environment: 'Test'
     strategy:
@@ -122,7 +122,7 @@ stages:
     variables: 
       app: bermtecstaging
     pool:
-      name: 'Demo'
+      name: 'Demo2'
     # Creates an environment if it doesn't exist.
     environment: 'Staging'
     strategy:
@@ -147,7 +147,7 @@ stages:
     variables: 
       app: bermtec
     pool:
-      name: 'Demo'
+      name: 'Demo2'
     # Creates an environment if it doesn't exist.
     environment: 'Prod'
     strategy:
